@@ -5,10 +5,11 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
+  entrypoint: '**/User.Api.csproj'
   buildConfiguration: 'Release'
 
 steps:
-- script: dotnet restore
+- script: dotnet restore $(entrypoint)
   displayName: 'dotnet restore'
 
 - script: dotnet build --configuration $(buildConfiguration)

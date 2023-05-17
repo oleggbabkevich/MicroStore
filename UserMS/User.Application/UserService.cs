@@ -2,7 +2,7 @@
 namespace User.Application
 {
 
-    public class UserService
+    public class UserService: IUserService
     {
         private readonly IUserRepository _userRepository;
 

@@ -1,13 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 using User.Application;
+using User.Domain;
 
 [Route("api/[controller]")]
 [ApiController]
 public class UserController : ControllerBase
 {
-    private readonly UserService _userService;
+    private readonly IUserService _userService;
 
-    public UserController(UserService userService)
+    public UserController(IUserService userService)
     {
         _userService = userService;
     }
@@ -33,4 +34,11 @@ public class UserController : ControllerBase
             return Unauthorized();
         }
     }
+
+    [HttpGet("ping")]
+    public async Task<IActionResult> Ping()
+    {
+        return await Task.FromResult(Ok("Ping"));
+    }
+
 }

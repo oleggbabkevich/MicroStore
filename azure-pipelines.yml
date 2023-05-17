@@ -1,0 +1,28 @@
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  entryPoint: 'UserMS/User.Api/User.API.csproj'
+  buildConfiguration: 'Release'
+
+steps:
+- script: dotnet restore $(entryPoint)
+  displayName: 'dotnet restore'
+
+- script: dotnet build --configuration $(buildConfiguration)
+  displayName: 'dotnet build $(buildConfiguration)'
+
+- script: dotnet test --configuration $(buildConfiguration) --collect:"XPlat Code Coverage"
+  displayName: 'dotnet test $(buildConfiguration)'
+
+- script: dotnet publish --configuration $(buildConfiguration) --output ./publish
+  displayName: 'dotnet publish $(buildConfiguration)'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathtoPublish: './publish' 
+    artifactName: 'drop'
+    publishLocation: 'Container'

@@ -20,9 +20,9 @@ steps:
 
 - script: dotnet publish --configuration $(buildConfiguration) --output ./publish
   displayName: 'dotnet publish $(buildConfiguration)'
-
-- task: PublishBuildArtifacts@1
+- task: Docker@2
   inputs:
-    pathtoPublish: './publish' 
-    artifactName: 'drop'
-    publishLocation: 'Container'
+    containerRegistry: 'olegbabkevich DockerHub'
+    repository: 'olegbabkevichcoherentsolutions/usermicroservice'
+    command: 'buildAndPush'
+    Dockerfile: '**/Dockerfile'

@@ -1,28 +1,30 @@
+# Docker
+# Build a Docker image
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
 trigger:
   - master
 
-pool:
-  vmImage: "ubuntu-latest"
+resources:
+  - repo: self
 
 variables:
-  entryPoint: "User.Api/User.API.csproj"
-  buildConfiguration: "Release"
+  tag: "$(Build.BuildId)"
 
-steps:
-  - script: dotnet restore $(entryPoint)
-    displayName: "dotnet restore"
-
-  - script: dotnet build --configuration $(buildConfiguration)
-    displayName: "dotnet build $(buildConfiguration)"
-
-  - script: dotnet test --configuration $(buildConfiguration) --collect:"XPlat Code Coverage"
-    displayName: "dotnet test $(buildConfiguration)"
-
-  - script: dotnet publish --configuration $(buildConfiguration) --output ./publish
-    displayName: "dotnet publish $(buildConfiguration)"
-
-  - task: PublishBuildArtifacts@1
-    inputs:
-      pathtoPublish: "./publish"
-      artifactName: "drop"
-      publishLocation: "Container"
+stages:
+  - stage: Build
+    displayName: Build image
+    jobs:
+      - job: Build
+        displayName: Build
+        pool:
+          vmImage: "ubuntu-latest"
+        steps:
+          - task: Docker@2
+            inputs:
+              containerRegistry: "olegbabkevich DockerHub"
+              repository: "olegbabkevichcoherentsolutions/usermicroservice"
+              command: "buildAndPush"
+              Dockerfile: "**/Dockerfile"
+              tags: |
+                $(tag)

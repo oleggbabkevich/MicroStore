@@ -16,6 +16,13 @@ terraform {
     }
 }
 
+variable "imagebuild" {
+  type        = string
+  default     = ""
+  description = "Latest image build"
+}
+
+
 provider "azurerm" {
     features {}
 }
@@ -35,7 +42,7 @@ resource "azurerm_container_group" "tfcg_test"{
 
     container {
     name            = "userms"
-    image           = "olegbabkevichcoherentsolutions/usermicroservice"
+    image           = "olegbabkevichcoherentsolutions/usermicroservice:${var.imagebuild}"
     cpu             = "1"
     memory          = "1"
 
